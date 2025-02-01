@@ -1,69 +1,51 @@
-<div align="center">
+# KNU, LXPLUS-GPU 서버에서 nu2flows 설치
 
-# NuFlows
+## 그전에..
+- nu2flows는 설치방법을 README.md로 제공하나 부실함
+- docker로 설치가 가능하지만 knu에서는 apptainer를 사용해야함
+- lxplus는 docker는 root 권한이 필요하여 rootless 환경을 제공하는 podman으로 해야함
 
-[![python](https://img.shields.io/badge/-Python_3.11-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![pytorch](https://img.shields.io/badge/-PyTorch_2.1-EE4C2C?logo=pytorch&logoColor=white)](https://pytorch.org/)
-[![lightning](https://img.shields.io/badge/-Lightning_2.1-792EE5?logo=lightning&logoColor=white)](https://lightning.ai/)
-[![hydra](https://img.shields.io/badge/-Hydra_1.3-89b8cd&logoColor=white)](https://hydra.cc/)
-[![wandb](https://img.shields.io/badge/-WandB_0.16-orange?logo=weightsandbiases&logoColor=white)](https://wandb.ai)
-![](./nuflows.png)
-</div>
+## Idea
+### 1) windows에서 wsl을 통해 docker file을 build해서 image를 만든다
+- mac에서 docker로 build를 해봤으나 architecture가 달라서 build가 되지 않음
+    - platform을 리눅스로 지정해도 애초에 mac의 실리콘 칩과 호환이 안되는 것 같음
+    - 따라서 windows에서 wsl에 Ubuntu를 설치하고 여기서 dockerfile을 build 했음
+    - **build시 nu2flows/ 디렉토리 내에서 한다.**
+```
+wsl -d Ubuntu #wsl 실행
+cd /path/to/docker/file #dockerfile 경로로 이동
+docker build -f docker/Dockerfile -t nu2flows_v2:v2.0 . #docker image 빌드
+```
+- 그리고 이미지 파일을 서버에 업로드할 수 있게 tar 파일로 저장한다
+```
+docker save -o nu2flows_v2.tar nu2flows_v2:v2.0
+```
+- tar파일은 현재 있는 디렉토리에 생성됨
+### 2) 이 image를 knu, lxplus-gpu 서버에 업로드한다.
+- scp 이용해서 업로드함.
+- docker image 파일의 용량은 10GB 이상임...
+```
+scp nu2flows_v2.tar gcho@lxplus-gpu.cern.ch:/eos/user/g/gcho/TopPhysics/ML
+```
+### 3) knu에서 apptainer를 이용해 docker image를 변환한다
+- docker image를 singularity image로 변환한다
+```
+singularity build <image_name>.sif docker-archive:/path/to/docker/image/file.tar
+singularity build nu2flows_v2.sif docker-archive:///eos/user/g/gcho/TopPhysics/ML/nu2flows/nu2flows_v2.tar
+```
+- lxplus에서도 똑같은 command로 변환가능하다
+### 4) 사용해본다...
+```
+singularity run nu2flows_v2.sif #image 실행->실행시 컨테이너 내부로 들어와짐
+singularity shell nu2flows_v2.sif #image 내 shell 접근->위와 동일한 효과
+singularity run --nv nu2flows_v2.sif #gpu 사용 가능
+singularity exec --nv nu2flows_v2.sif python scripts/train.py #training code 실행
+```
 
-
-
-This repository facilitates the steps required the produce and evaluate
-conditional normalising flows for neutrino regression in events with multiple neutrinos.
-- Associated papers: https://arxiv.org/abs/2207.00664
-- Associated papers: https://arxiv.org/abs/2307.02405
-
-## Setup
-
-1) Setup the environment.
-    - This project was tested with python 3.9.
-    - You can use the requirement.txt file to setup the appropriate python packages.
-    - Alternatively use the docker build file to create an image which can run the package.
-2) Download the data.
-    - The datafiles are too large and thus are not stored in this repository.
-    - You can find them on Zenodo:
-        - doi: 10.5281/zenodo.8113516
-
-
-
-## Configuration
-
-- This package uses Hydra and OmegaConf.
-- The main config file is `train.yaml` which composes all others to generate a single run config
-    - In this file you can specify the `network_name`, `seed`, etc.
-    - More specific settings are found in one of the other config folders:
-        - `callbacks`:
-            - Provides a collection of `lightning.pytorch.callbacks` to run during training.
-        - `datamodule`:
-            - Defines the data files used for training and testing.
-            - Also which coordinates are used for the object kinematics.
-        - `hydra`:
-            - Configures the hydra package for running, does not need to be changed.
-        - `loggers`:
-            - By default we use `Weights and Biases` for logging.
-                - You will need to make a free account here: `https://wandb.ai/` and put your username in the `entity` entry of this yaml file.
-        - `model`:
-            - Configures the model architecture and hyperparameters for training.
-            - By default the transformer + normalising flow is used.
-        - `paths`:
-            - Define the paths to the data download here as well as the desired save directory for the models.
-        - `trainer`:
-            - Configuration for the PyTorch Lightning `Trainer` class.
-
-## Running
-
-We provide 3 executable scripts
-1) `train.py`
-    - Compiles the run config as described above and trains the model.
-    - Will save checkpoints based on the `paths.output_dir` key.
-
-2) `export.py`
-    - Creates an output `.h5` file containing neutrino candidates for each event in the models test set.
-
-3) `plot.py`
-    - Loads the test set data and a model's exported neutrinos.
-    - More can be done here but by default we simply plot the model and truth neutrino energy as well as the reconstructed top mass.
+## mltools
+- nu2flows를 git clone하면 mltools는 submodule로 가져와짐
+- 이를 가져오려면 nu2flows 디렉토리에서
+```
+git submodule update --init --recursive
+```
+을 하면 mltools도 cloning 해서 다운받아진다!!
