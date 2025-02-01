@@ -21,19 +21,19 @@ docker build -f docker/Dockerfile -t nu2flows_v2:v2.0 . #docker image 빌드
 docker save -o nu2flows_v2.tar nu2flows_v2:v2.0
 ```
 - tar파일은 현재 있는 디렉토리에 생성됨
-### 2) 이 image를 knu, lxplus-gpu 서버에 업로드한다.
+### 2) 이 image를 knu서버에 업로드한다.
+- lxplus-gpu에서 이미지 변환하려고 하면 용량때문에 안되고 eos에서 하려고 해도 경로를 못 찾아서 안됐음음
 - scp 이용해서 업로드함.
 - docker image 파일의 용량은 10GB 이상임...
 ```
-scp nu2flows_v2.tar gcho@lxplus-gpu.cern.ch:/eos/user/g/gcho/TopPhysics/ML
+scp nu2flows_v2.tar gcho@cms02.knu.ac.kr:/u/user/gcho/TopPhysics/CPV/MachineLearning
 ```
 ### 3) knu에서 apptainer를 이용해 docker image를 변환한다
 - docker image를 singularity image로 변환한다
 ```
-singularity build <image_name>.sif docker-archive:/path/to/docker/image/file.tar
-singularity build nu2flows_v2.sif docker-archive:///eos/user/g/gcho/TopPhysics/ML/nu2flows/nu2flows_v2.tar
+singularity build nu2flows_v2.sif docker-archive:///u/user/gcho/TopPhysics/CPV/MachineLearning/nu2flows_v2.tar
 ```
-- lxplus에서도 똑같은 command로 변환가능하다
+- lxplus에서 쓰려면 sif 파일을 scp로 업로드해야한다
 ### 4) 사용해본다...
 ```
 singularity run nu2flows_v2.sif #image 실행->실행시 컨테이너 내부로 들어와짐
