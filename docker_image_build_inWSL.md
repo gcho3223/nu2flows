@@ -7,18 +7,20 @@
 
 ## Idea
 1) windows에서 wsl을 통해 docker file을 build해서 image를 만든다
-- mac에서 docker로 build를 해봤으나 OS가 달라서 build가 되지 않음
+- mac에서 docker로 build를 해봤으나 architecture가 달라서 build가 되지 않음
     - platform을 리눅스로 지정해도 애초에 mac의 실리콘 칩과 호환이 안되는 것 같음
     - 따라서 windows에서 wsl에 Ubuntu를 설치하고 여기서 dockerfile을 build 했음
+    - *build시 nu2flows/ 디렉토리 내에서 한다.*
 ```
-wsl -d Ubuntu
-cd /path/to/docker/file
-docker build -f docker/Dockerfile -t nu2flows_v2:v2.0 .
+wsl -d Ubuntu #wsl 실행
+cd /path/to/docker/file #dockerfile 경로로 이동
+docker build -f docker/Dockerfile -t nu2flows_v2:v2.0 . #docker image 빌드
 ```
 - 그리고 이미지 파일을 서버에 업로드할 수 있게 tar 파일로 저장한다
 ```
 docker save -o nu2flows_v2.tar nu2flows_v2:v2.0
 ```
+- tar파일은 현재 있는 디렉토리에 생성됨됨
 2) 이 image를 knu, lxplus에 업로드한다.
 - scp 이용해서 업로드함.
 - docker image 파일의 용량은 10GB 이상임...
