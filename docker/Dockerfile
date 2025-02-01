@@ -19,7 +19,7 @@ RUN apt-get -y update && \
         hdf5-tools \
         gcc \
         graphviz \
-        sudo \
+        #sudo \
         texlive \
         texlive-latex-extra \
         texlive-fonts-recommended \
@@ -34,3 +34,9 @@ RUN python -m pip --version
 # Intall python dependencies
 COPY requirements.txt .
 RUN python -m pip install --upgrade -r requirements.txt
+
+# 프로젝트 파일 복사 (nu2flows/ 전체를 이미지 내 /nu2flows로 복사)
+COPY . .
+
+# 서브모듈 초기화 (mltools 포함)
+RUN git submodule update --init --recursive
