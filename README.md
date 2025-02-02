@@ -13,7 +13,7 @@
     - **build시 nu2flows/ 디렉토리 내에서 한다.**
 ```
 wsl -d Ubuntu #wsl 실행
-cd /path/to/docker/file #dockerfile 경로로 이동
+cd /path/to/nu2flows #nu2flows 경로로 이동
 docker build -f docker/Dockerfile -t nu2flows_v2:v2.0 . #docker image 빌드
 ```
 - 그리고 이미지 파일을 서버에 업로드할 수 있게 tar 파일로 저장한다
@@ -40,6 +40,18 @@ singularity run nu2flows_v2.sif #image 실행->실행시 컨테이너 내부로 
 singularity shell nu2flows_v2.sif #image 내 shell 접근->위와 동일한 효과
 singularity run --nv nu2flows_v2.sif #gpu 사용 가능
 singularity exec --nv nu2flows_v2.sif python scripts/train.py #training code 실행
+```
+- 이제 train.py 코드를 실행해본다
+```
+Singularity> pwd
+/output/nu2flows  # WORKDIR로 설정된 경로
+
+# 파일 리스트 확인
+Singularity> ls
+scripts/  requirements.txt  docker/  ...  # 프로젝트 파일 전체 확인
+
+# 학습 코드 실행
+Singularity> python scripts/train.py
 ```
 
 ## mltools

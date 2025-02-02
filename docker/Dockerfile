@@ -6,7 +6,6 @@ ENV LC_ALL C.UTF-8
 ENV PIP_ROOT_USER_ACTION=ignore
 ENV PIP_NO_CACHE_DIR=false
 ARG DEBIAN_FRONTEND=noninteractive
-WORKDIR /nu2flows
 
 RUN apt-get -y update && \
     apt-get -y upgrade && \
@@ -35,8 +34,10 @@ RUN python -m pip --version
 COPY requirements.txt .
 RUN python -m pip install --upgrade -r requirements.txt
 
-# 프로젝트 파일 복사 (nu2flows/ 전체를 이미지 내 /nu2flows로 복사)
-COPY . .
+# 컨텍스트 전체 복사 (nu2flows/ -> /nu2flows)
+# copy current directory to /nu2flows in docker image
+COPY . /nu2flows 
+WORKDIR /nu2flows
 
 # 서브모듈 초기화 (mltools 포함)
 RUN git submodule update --init --recursive
