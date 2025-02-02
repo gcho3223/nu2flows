@@ -35,23 +35,19 @@ singularity build nu2flows_v2.sif docker-archive:///u/user/gcho/TopPhysics/CPV/M
 ```
 - lxplus에서 쓰려면 sif 파일을 scp로 업로드해야한다
 ### 4) 사용해본다...
+- nu2flows 디렉토리를 singularity container에 마운트해서 실행한다
 ```
+singularity shell --bind /u/user/gcho/TopPhysics/CPV/MachineLearning/nu2flows_singularity/:/nu2flows nu2flows.sif
 singularity run nu2flows_v2.sif #image 실행->실행시 컨테이너 내부로 들어와짐
 singularity shell nu2flows_v2.sif #image 내 shell 접근->위와 동일한 효과
 singularity run --nv nu2flows_v2.sif #gpu 사용 가능
-singularity exec --nv nu2flows_v2.sif python scripts/train.py #training code 실행
+singularity exec --nv nu2flows_v2.sif python scripts/train.py # training code 실행
 ```
-- 이제 train.py 코드를 실행해본다
+- container 내부에서 디렉토리 이동
 ```
-Singularity> pwd
-/output/nu2flows  # WORKDIR로 설정된 경로
-
-# 파일 리스트 확인
-Singularity> ls
-scripts/  requirements.txt  docker/  ...  # 프로젝트 파일 전체 확인
-
-# 학습 코드 실행
-Singularity> python scripts/train.py
+Apptainer> ls / #내부 구조 확인가능함
+Apptainer> cd /nu2flow/scripts #디렉토리 이동할때 항상 /nu2flow/* 로해야하는듯
+Apptainer> python3 train.py #학습 코드 실행
 ```
 
 ## mltools
