@@ -54,7 +54,12 @@ def main(cfg: DictConfig) -> None:
         model_class = hydra.utils.get_class(cfg.model._target_)
         model = model_class.load_from_checkpoint(cfg.ckpt_path, map_location="cpu")
     else:
-        model = hydra.utils.instantiate(cfg.model, **datamodule.model_kwargs)
+        #model = hydra.utils.instantiate(cfg.model, **datamodule.model_kwargs)
+        try:
+            model_kwargs = datamodule.model_kwargs
+        except AttributeError:
+            model_kwargs = {}
+        model = hydra.utils.instantiate(cfg.model, **model_kwargs)
 
     if cfg.compile:
         log.info(f"Compiling the model using torch 2.0: {cfg.compile}")
