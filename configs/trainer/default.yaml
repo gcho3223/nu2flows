@@ -1,16 +1,17 @@
 _target_: lightning.Trainer
 
 min_epochs: 1
-max_epochs: 999999
+max_epochs: 1
 enable_progress_bar: True
 #accelerator: auto
-#accelerator: mps
-accelerator: mps
+#accelerator: cpu
+accelerator: cpu
 devices: 1
 precision: 32
 check_val_every_n_epoch: 1
 gradient_clip_val: 1
 num_sanity_val_steps: 0 # Turn this off as it fucks with the iterative norm layers
+log_every_n_steps: 10  # 10스텝마다 로그 출력 (기본값: 50)
 
 # Interpolated
 default_root_dir: ${paths.output_dir}

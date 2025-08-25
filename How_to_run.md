@@ -77,30 +77,36 @@ configs/
 ```
 
 ### 2.2 실행 방법
+#### activate virtual environment
+```bash
+conda activate nu2flows
+```
+- 가상환경 내에서는, python3 대신 python을 사용해야 한다
+
 
 #### 기본 실행 (MPS 가속 사용):
 ```bash
-python3 scripts/train.py
+python scripts/train.py
 ```
 
 #### CPU 모드로 실행:
 ```bash
-python3 scripts/train.py trainer.accelerator=cpu
+python scripts/train.py trainer.accelerator=cpu
 ```
 
 #### 테스트 실행 (빠른 확인):
 ```bash
-python3 scripts/train.py +trainer.limit_train_batches=5 trainer.max_epochs=1
+python scripts/train.py +trainer.limit_train_batches=5 trainer.max_epochs=1
 ```
 
 #### 시각화 없이 실행:
 ```bash
-python3 scripts/train.py model.gen_validation=0
+python scripts/train.py model.gen_validation=0
 ```
 
 #### 설정 오버라이드 예시:
 ```bash
-python3 scripts/train.py \
+python scripts/train.py \
   trainer.max_epochs=10 \
   datamodule.loader_conf.batch_size=2048 \
   model.gen_validation=5
@@ -254,10 +260,10 @@ train.yaml (메인)
 #### 오버라이드 방식:
 ```bash
 # 명령행에서 설정 변경
-python3 scripts/train.py trainer.max_epochs=50 model.gen_validation=5
+python scripts/train.py trainer.max_epochs=50 model.gen_validation=5
 
 # + 기호로 새 설정 추가
-python3 scripts/train.py +trainer.limit_train_batches=10
+python scripts/train.py +trainer.limit_train_batches=10
 ```
 
 ### 4.4 데이터 플로우
@@ -278,16 +284,16 @@ Raw Data (ROOT) → HDF5 → DataLoader → Model → Predictions → Visualizat
 #### 메모리 최적화:
 ```bash
 # 작은 배치 크기로 메모리 사용량 줄이기
-python3 scripts/train.py datamodule.loader_conf.batch_size=1024
+python scripts/train.py datamodule.loader_conf.batch_size=1024
 
 # 워커 수 조정
-python3 scripts/train.py datamodule.loader_conf.num_workers=4
+python scripts/train.py datamodule.loader_conf.num_workers=4
 ```
 
 #### 빠른 테스트:
 ```bash
 # 적은 배치로 빠른 확인
-python3 scripts/train.py +trainer.limit_train_batches=5 +trainer.limit_val_batches=2
+python scripts/train.py +trainer.limit_train_batches=5 +trainer.limit_val_batches=2
 ```
 
 ---
@@ -315,13 +321,13 @@ conda activate nu2flows
 
 ```bash
 # 전체 에러 스택 확인
-HYDRA_FULL_ERROR=1 python3 scripts/train.py
+HYDRA_FULL_ERROR=1 python scripts/train.py
 
 # GPU 메모리 상태 확인
-python3 -c "import torch; print(torch.backends.mps.is_available())"
+python -c "import torch; print(torch.backends.mps.is_available())"
 
 # 설정 확인 (실제 실행 없이)
-python3 scripts/train.py --config-path=configs --config-name=train.yaml --help
+python scripts/train.py --config-path=configs --config-name=train.yaml --help
 ```
 
 ---

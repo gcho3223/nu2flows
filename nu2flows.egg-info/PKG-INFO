@@ -1,0 +1,39 @@
+Metadata-Version: 2.4
+Name: nu2flows
+Version: 0.5
+Summary: Testbed for SSL training for jets
+Author-email: Matthew Leigh <matthew.leigh@unige.ch>
+License-Expression: MIT
+Project-URL: Homepage, https://gitlab.cern.ch/mleigh/nu2flows/
+Project-URL: Issue Tracker, https://gitlab.cern.ch/mleigh/nu2flows/-/issues
+Requires-Python: <3.12,>=3.10
+License-File: LICENSE
+Requires-Dist: torch
+Requires-Dist: torchmetrics
+Requires-Dist: lightning
+Requires-Dist: wandb
+Requires-Dist: onnx
+Requires-Dist: onnxruntime
+Requires-Dist: packaging
+Requires-Dist: ninja
+Requires-Dist: omegaconf
+Requires-Dist: hydra-core
+Requires-Dist: hydra-colorlog
+Requires-Dist: matplotlib
+Requires-Dist: seaborn
+Requires-Dist: plotly
+Requires-Dist: numpy
+Requires-Dist: scipy
+Requires-Dist: scikit-hep
+Requires-Dist: scikit-learn
+Requires-Dist: pykeops
+Requires-Dist: h5py
+Requires-Dist: ruff
+Requires-Dist: tqdm
+Requires-Dist: pylint
+Requires-Dist: dotmap
+Requires-Dist: rootutils
+Requires-Dist: pre-commit
+Requires-Dist: rich
+Requires-Dist: pytest
+Dynamic: license-file

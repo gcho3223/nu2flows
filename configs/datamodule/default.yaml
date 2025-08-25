@@ -25,7 +25,8 @@ test_conf:
 
 loader_conf:
   pin_memory: False  # MPS에서는 pin_memory 비활성화
-  batch_size: 4096
+  batch_size: 1024
   num_workers: 6
+  persistent_workers: True  # 워커 재사용으로 성능 향상
 
 val_frac: 0.1

@@ -9,10 +9,10 @@ onnxruntime
 # flash attention 2
 packaging
 ninja
-flash-attn
+# flash-attn
 
 # Specific for the neutrinos (git was updated more recently than pypi)
-git+https://github.com/VincentStimper/normalizing-flows.git
+# git+https://github.com/VincentStimper/normalizing-flows.git#egg=normalizing-flows
 
 # hydra
 omegaconf
