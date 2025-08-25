@@ -1,0 +1,12 @@
+# @package _global_
+defaults:
+  - override /datamodule: geant4.yaml
+
+trainer:
+  precision: 16-mixed
+  max_epochs: 100
+
+train_group: even
+test_group: odd
+project_name: nu2flows_geant4
+network_name: final_long_${train_group}

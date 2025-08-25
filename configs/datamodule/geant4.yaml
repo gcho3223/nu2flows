@@ -1,0 +1,21 @@
+_target_: src.datamodules.geant4.Geant4H5DataModule
+
+train_conf:
+  file_name: merged.h5
+  file_dir: ${paths.data_dir}
+  group_name: ${train_group}
+  num_events: null
+
+test_conf:
+  file_name: ${..train_conf.file_name}
+  file_dir: ${..train_conf.file_dir}
+  group_name: ${test_group}
+  num_events: 1000_000
+
+loader_conf:
+  pin_memory: True
+  batch_size: 2048
+  num_workers: 4 # Keeps throwing out errors if > 0
+  persistent_workers: True
+
+val_frac: 0.01 # Main dataset is 30M events, so 1% is enough for validation

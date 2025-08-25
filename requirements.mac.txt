@@ -1,0 +1,41 @@
+# pytorch / deep learning
+lightning
+wandb
+onnx
+onnxruntime
+
+# flash attention 2
+packaging
+ninja
+
+# Specific for the neutrinos (git was updated more recently than pypi)
+git+https://github.com/VincentStimper/normalizing-flows.git@main#egg=normalizing-flows
+
+# hydra
+omegaconf
+hydra-core
+hydra-colorlog
+
+# plotting
+matplotlib
+seaborn
+plotly
+
+# data science
+numpy
+scipy
+scikit-hep
+scikit-learn
+pykeops
+h5py
+
+# other
+ruff
+tqdm
+pylint
+dotmap
+rootutils
+pre-commit
+rich
+pytest
+

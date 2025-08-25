@@ -1,0 +1,9 @@
+wandb:
+  _target_: lightning.pytorch.loggers.wandb.WandbLogger
+  entity: mleigh
+  offline: True
+  id: null
+  log_model: False
+  project: ${project_name}
+  name: ${network_name}
+  save_dir: ${paths.full_path}
