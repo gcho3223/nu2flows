@@ -264,6 +264,7 @@ class NuFlows(LightningModule):
                 ylabel=f"Target: {k}0",
                 path=f"plots/corr_{k}.png",
                 return_img=True,
+                do_pearson=True,  # 상관계수 표시 활성화
             )
             if wandb.run is not None:
                 wandb.log({f"valid/corr_{k}": [wandb.Image(img)]})
