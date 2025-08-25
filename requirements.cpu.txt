@@ -1,0 +1,43 @@
+# pytorch / deep learning (CPU 버전으로 별도 설치됨)
+torchmetrics
+lightning
+wandb
+normflows
+onnx
+onnxruntime
+
+# packaging은 유지하지만 flash-attn은 GPU 전용이므로 제외
+packaging
+ninja
+# flash-attn  # GPU 전용이므로 주석처리
+
+# Specific for the neutrinos
+git+https://github.com/VincentStimper/normalizing-flows.git
+
+# hydra
+omegaconf
+hydra-core
+hydra-colorlog
+
+# plotting
+matplotlib
+seaborn
+plotly
+
+# data science
+numpy
+scipy
+scikit-hep
+scikit-learn
+# pykeops  # CUDA가 필요할 수 있으므로 주석처리
+h5py
+
+# other
+ruff
+tqdm
+pylint
+dotmap
+rootutils
+pre-commit
+rich
+pytest

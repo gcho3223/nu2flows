@@ -12,15 +12,8 @@ from mltools.mltools.lightning_utils import simple_optim_sched
 from mltools.mltools.mlp import MLP
 from mltools.mltools.modules import IterativeNormLayer
 from mltools.mltools.plotting import plot_corr_heatmaps, plot_multi_hists, quantile_bins
-# from mltools.mltools.torch_utils import to_np  # 이 줄을 주석처리
-from mltools.mltools.transformers import Transformer
-
-
-def to_np(tensor):
-    """Convert torch tensor to numpy array."""
-    if hasattr(tensor, 'detach'):
-        return tensor.detach().cpu().numpy()
-    return tensor
+from mltools.mltools.torch_utils import to_np
+from mltools.mltools.transformers import TransformerVectorEncoder
 
 
 class NuFlows(LightningModule):
@@ -70,7 +63,7 @@ class NuFlows(LightningModule):
         self.disable_masking = False
 
         # Initialise the transformer vector encoder
-        self.transformer = Transformer(**transformer_config)
+        self.transformer = TransformerVectorEncoder(**transformer_config)
         dim = self.transformer.inpt_dim
 
         # Record the input dimensions and initialise an embedding network for each
@@ -129,14 +122,7 @@ class NuFlows(LightningModule):
         all_mask = None if self.disable_masking else T.hstack(all_mask)
 
         # Pass the combined tensor through the transformer and return
-        transformer_output = self.transformer(embeddings, mask=all_mask)
-        
-        # 차원 불일치 문제 해결을 위해 강제로 2차원으로 변환
-        if transformer_output.dim() == 3:
-            # (batch_size, seq_len, features) -> (batch_size, features)
-            transformer_output = transformer_output.mean(dim=1)  # 시퀀스 차원 평균
-        
-        return transformer_output
+        return self.transformer(embeddings, mask=all_mask)
 
     def get_targets(self, targets: dict) -> T.Tensor:
         """Unpack the target dictionary as a single tensor."""
@@ -167,12 +153,8 @@ class NuFlows(LightningModule):
 
     def _shared_step(self, sample: tuple, flag: str) -> T.Tensor:
         """Shared step for training and validation."""
-        # Unpack the sample (weights 없이 처리)
-        if len(sample) == 3:
-            inputs, targets, _weights = sample
-        else:
-            inputs, targets = sample
-            _weights = None
+        # Unpack the sample
+        inputs, targets, _weights = sample
 
         # Get the context and the flattened targets
         ctxt = self.get_context(inputs)

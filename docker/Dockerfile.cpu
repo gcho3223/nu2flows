@@ -1,0 +1,44 @@
+FROM pytorch/pytorch:2.3.1-cuda11.8-cudnn8-runtime
+
+# 환경 변수
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
+ENV PIP_ROOT_USER_ACTION=ignore
+ENV PIP_NO_CACHE_DIR=false
+ARG DEBIAN_FRONTEND=noninteractive
+
+# CPU 전용 설정
+ENV CUDA_VISIBLE_DEVICES=""
+
+RUN apt-get -y update && \
+    apt-get -y upgrade && \
+    apt-get -y install \
+        build-essential \
+        wget \
+        curl \
+        git \
+        make \
+        hdf5-tools \
+        gcc \
+        graphviz \
+        texlive \
+        texlive-latex-extra \
+        texlive-fonts-recommended \
+        dvipng
+
+# Python pip 업데이트
+RUN python -m pip install --upgrade pip
+
+# CPU 전용 PyTorch 재설치
+RUN pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+
+# requirements 복사 및 설치 (flash-attn 제외)
+COPY requirements.cpu.txt .
+RUN python -m pip install --upgrade -r requirements.cpu.txt
+
+# 전체 컨텍스트 복사
+COPY . /nu2flows 
+WORKDIR /nu2flows
+
+# 서브모듈 초기화
+RUN git submodule update --init --recursive

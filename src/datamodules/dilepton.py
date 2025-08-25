@@ -206,3 +206,10 @@ class H5DataModule(LightningDataModule):
 
     def predict_dataloader(self) -> DataLoader:
         return self.test_dataloader()
+
+    @property
+    def model_kwargs(self) -> dict:
+        return {
+            "input_dimensions": self.input_dimensions(),
+            "target_dimensions": self.target_dimensions()
+        }

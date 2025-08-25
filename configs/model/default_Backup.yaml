@@ -1,12 +1,4 @@
 _target_: src.models.nuflows.NuFlows
-input_dimensions:
-  misc: 2
-  met: 2
-  leptons: 8
-  jets: 50
-target_dimensions:
-  neutrino: 3
-  antineutrino: 3
 
 gen_validation: 10
 
@@ -18,16 +10,21 @@ embed_config:
 transformer_config:
   inpt_dim: 128
   outp_dim: 128
-  num_layers: 5
-  num_registers: 2
-  pack_inputs: False
-  unpack_output: True
-  layer_config:
-    attn_config:
-      num_heads: 4 # 어텐션 헤드 수 (CPU 환경에 맞게 축소)
-      dropout: 0
-    ff_config:
-      dropout: 0
+  do_packed: True
+  encoder_config:
+    dim: 128
+    num_layers: 5
+    num_registers: 2
+    layer_config:
+      num_heads: 8
+      layerscale_init: 0.1
+  classattention_config:
+    dim: 128
+    num_layers: 2
+    do_final_norm: True
+    layer_config:
+      num_heads: 4
+      layerscale_init: null # Don't layerscale a cross attention block!
 
 flow_config:
   num_stacks: 10
@@ -46,12 +43,13 @@ flow_config:
 optimizer:
   _target_: torch.optim.AdamW
   _partial_: true
-  lr: 5.0e-4  # 학습률 조금 높임 default 1.0e-4
+  lr: 1.0e-4
+  # weight_decay: 1.0e-6
 
 scheduler:
   _target_: mltools.mltools.lightning_utils.linear_warmup_cosine_decay
   _partial_: true
-  total_steps: -1  # 자동 계산을 위해 -1 설정
-  warmup_steps: 1  # CPU 환경 및 적은 배치 수에 맞게 설정
+  total_steps: null # Replaced by trainer max_steps for a one cycle
+  warmup_steps: 10_000
   init_factor: 1.0e-5
   final_factor: 1.0e-5

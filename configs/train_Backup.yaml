@@ -14,8 +14,8 @@ defaults:
 
 # Basic training configuration
 seed: 42 # For reproducibility
-project_name: ttbar_nu2flows # Determines output directory path and wandb project
-network_name: toCompareMac # Used for both saving and wandb
+project_name: nu2flows # Determines output directory path and wandb project
+network_name: test # Used for both saving and wandb
 ckpt_path: null  # Checkpoint path to resume training
 weight_ckpt_path: null # Checkpoint path to load weights (but not optimizers etc)
 tags: null # Extra tags passed to the logger

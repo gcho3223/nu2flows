@@ -41,6 +41,7 @@ singularity shell --bind /u/user/gcho/TopPhysics/CPV/MachineLearning/nu2flows_si
 singularity run nu2flows_v2.sif #image 실행->실행시 컨테이너 내부로 들어와짐
 singularity shell nu2flows_v2.sif #image 내 shell 접근->위와 동일한 효과
 singularity run --nv nu2flows_v2.sif #gpu 사용 가능
+singularity run --no-gpu nu2flows.sif # GPU 없이 Singularity 컨테이너 실행
 singularity exec --nv nu2flows_v2.sif python scripts/train.py # training code 실행
 ```
 - container 내부에서 디렉토리 이동
@@ -54,6 +55,6 @@ Apptainer> python3 train.py #학습 코드 실행
 - nu2flows를 git clone하면 mltools는 submodule로 가져와짐
 - 이를 가져오려면 nu2flows 디렉토리에서
 ```
-git submodule update --init --recursive
+git clone --recurse-submodules https://mleigh:glpat-yrsHi28ZgUbwmX9rPoGX@gitlab.cern.ch/mleigh/mltools.git
 ```
 을 하면 mltools도 cloning 해서 다운받아진다!!

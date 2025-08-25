@@ -1,0 +1,75 @@
+Bootstrap: docker
+From: pytorch/pytorch:2.3.1-cuda11.8-cudnn8-runtime
+
+%environment
+    export LANG=C.UTF-8
+    export LC_ALL=C.UTF-8
+    export PIP_ROOT_USER_ACTION=ignore
+    export PIP_NO_CACHE_DIR=false
+    export CUDA_VISIBLE_DEVICES=""
+
+%post
+    export DEBIAN_FRONTEND=noninteractive
+    
+    # 패키지 업데이트 및 설치
+    apt-get -y update
+    apt-get -y upgrade
+    apt-get -y install \
+        build-essential \
+        wget \
+        curl \
+        git \
+        make \
+        hdf5-tools \
+        gcc \
+        graphviz \
+        texlive \
+        texlive-latex-extra \
+        texlive-fonts-recommended \
+        dvipng
+    
+    # Python 패키지 업데이트
+    python -m pip install --upgrade pip
+    
+    # CPU 전용 PyTorch 설치
+    pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+    
+    # 기본 패키지들 설치
+    pip install \
+        torchmetrics \
+        lightning \
+        wandb \
+        normflows \
+        onnx \
+        onnxruntime \
+        packaging \
+        ninja \
+        omegaconf \
+        hydra-core \
+        hydra-colorlog \
+        matplotlib \
+        seaborn \
+        plotly \
+        numpy \
+        scipy \
+        scikit-hep \
+        scikit-learn \
+        h5py \
+        ruff \
+        tqdm \
+        pylint \
+        dotmap \
+        rootutils \
+        pre-commit \
+        rich \
+        pytest
+    
+    # normalizing-flows 깃허브에서 설치
+    pip install git+https://github.com/VincentStimper/normalizing-flows.git
+
+%files
+    . /nu2flows
+
+%runscript
+    cd /nu2flows
+    exec /bin/bash
