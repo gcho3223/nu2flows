@@ -105,11 +105,10 @@ export PYTHONPATH=/u/user/gcho/TopPhysics/CPV/MachineLearning/nu2flows:$PYTHONPA
 ### CPU 전용 모드로 컨테이너 시작
 ```bash
 # GPU 비활성화하여 컨테이너 실행 (권장 방법)
-CUDA_VISIBLE_DEVICES="" singularity run ../nu2flows_cpu.sif
-
-# 또는 현재 디렉토리에 .sif 파일이 있다면
-CUDA_VISIBLE_DEVICES="" singularity run nu2flows.sif
+singularity shell --bind /u/user/gcho/TopPhysics/CPV/MachineLearning/nu2flows/:/nu2flows ../nu2flows_cpu.sif
 ```
+- **nu2flows**로 alias 해둠
+- 이후 python3 script/train.py 하면 실행됨
 
 **주의사항:**
 - **KNU 서버는 Apptainer 사용**: `--no-gpu` 옵션 지원 안 함
